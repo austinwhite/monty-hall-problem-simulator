@@ -66,7 +66,7 @@ def construct_visualization(switch, rand, no_switch):
 
     x = np.array(x_values)
     y = np.array(switch)
-    plt.scatter(x, y, POINT_SIZE, label="Switch")
+    plt.scatter(x, y, POINT_SIZE, label="Switch Door")
     plt.plot(x, generate_np_array(0.33), color="black")
 
     x = np.array(x_values)
@@ -76,7 +76,7 @@ def construct_visualization(switch, rand, no_switch):
 
     x = np.array(x_values)
     y = np.array(no_switch)
-    plt.scatter(x, y, POINT_SIZE, label="No swtich")
+    plt.scatter(x, y, POINT_SIZE, label="Keep Door")
     plt.plot(x, generate_np_array(0.66), color="black", label="Theoretical")
 
     plt.legend(loc="upper right")

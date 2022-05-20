@@ -1,7 +1,10 @@
 import random
+import numpy as np
+import matplotlib.pyplot as plt
 
-BATCHES = 10
-ITERATIONS = 100
+BATCHES = 1000
+ITERATIONS = 2500 
+POINT_SIZE = 3
 
 def monty_hall(switch=False, rand=False):
     remove = 0 
@@ -22,6 +25,7 @@ def monty_hall(switch=False, rand=False):
 
     return choice == prize 
 
+
 def perform_batch(switch=False, rand=False):
     wins = 0
 
@@ -31,15 +35,62 @@ def perform_batch(switch=False, rand=False):
 
     return wins/ITERATIONS
 
-if __name__ == "__main__":
-    print("-- SWITCH --")
-    for _ in range(BATCHES):
-        print(perform_batch(switch=True))
 
-    print("-- RANDOM --")
+def simulate(switch=False, rand=False):
+    win_loss_ratio = []
+
     for _ in range(BATCHES):
-        print(perform_batch(rand=True))
+        win_loss_ratio.append(perform_batch(switch, rand))
+
+    return win_loss_ratio
+
+
+def generate_np_array(forced_value=None):
+    arr = []
     
-    print("-- NO SWITCH --")
-    for _ in range(BATCHES):
-        print(perform_batch())
+    if forced_value:
+        arr = [forced_value for _ in range(BATCHES)]
+    else:
+        arr = [i for i in range(BATCHES)]
+    
+    return np.array(arr)
+
+
+def construct_visualization(switch, rand, no_switch):
+    x_values = generate_np_array()
+
+    plt.title("The Monty Hall Problem")
+    plt.ylim([0.2, 0.8])
+    plt.xlabel("Iteration")
+    plt.ylabel("Win Rate")
+
+    x = np.array(x_values)
+    y = np.array(switch)
+    plt.scatter(x, y, POINT_SIZE, label="Switch")
+    plt.plot(x, generate_np_array(0.33), color="black")
+
+    x = np.array(x_values)
+    y = np.array(rand)
+    plt.scatter(x, y, POINT_SIZE, label="Random")
+    plt.plot(x, generate_np_array(0.5), color="black")
+
+    x = np.array(x_values)
+    y = np.array(no_switch)
+    plt.scatter(x, y, POINT_SIZE, label="No swtich")
+    plt.plot(x, generate_np_array(0.66), color="black", label="Theoretical")
+
+    plt.legend(loc="upper right")
+
+    plt.show()
+
+
+if __name__ == "__main__":
+    print("Performing Simulation: Switch Choice")
+    switch = simulate(switch=True)
+    print("Performing Simulation: Random Choice")
+    rand = simulate(rand=True)
+    print("Performing Simulation: Keep Choice")
+    no_switch = simulate()
+
+    print("Constructing Visualiztion.")
+    construct_visualization(switch, rand, no_switch)
